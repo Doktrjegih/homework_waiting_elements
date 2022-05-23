@@ -5,7 +5,7 @@ from selenium import webdriver
 
 def pytest_addoption(parser):
     parser.addoption("--browser", default="chrome")
-    parser.addoption("--url")
+    parser.addoption("--url", default="http://10.20.53.41:8081")
 
 
 @pytest.fixture
