@@ -1,6 +1,20 @@
-import pytest
+from dataclasses import dataclass
 
+import pytest
 from selenium import webdriver
+
+from pages.base_page import BasePage
+
+
+@dataclass
+class AuthData:
+    ip: str
+
+
+@pytest.fixture
+def auth_data(request):
+    ip = request.config.getoption("url")
+    return AuthData(ip=ip)
 
 
 def pytest_addoption(parser):
@@ -27,7 +41,7 @@ def driver(request):
     return browser
 
 
-def pytest_generate_tests(metafunc):
-    option_value = metafunc.config.option.url
-    if "url" in metafunc.fixturenames and option_value is not None:
-        metafunc.parametrize("url", [option_value])
+@pytest.fixture
+def open_opencart(driver: webdriver, auth_data: AuthData):
+    base = BasePage(driver)
+    base.open(auth_data.ip)
